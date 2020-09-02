@@ -1,0 +1,38 @@
+In [ ]:
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA 
+from sklearn.preprocessing import StandardScaler
+In [ ]:
+df = pd.read_csv('PCA_practice_dataset.csv')
+df = pd.DataFrame(data)
+df
+X = df.to_numpy()
+X.shape
+In [ ]:
+pca = PCA()
+X = pca.fit_transform(X)
+
+cum_var = np.cumsum(pca.explained_variance_ratio_)*100
+
+thresholds = [i for i in range (90,97+1,1)]
+
+components = [np.argmax(cum_var>threshold)for threshold in thresholds]
+for component, threshold in zip(components,thresholds):
+    print("{}% threshold requires {} components:".format(threshold,component))
+In [ ]:
+plt.plot(components,range(90,97+1,1), 'bo-', linewidth = 2)
+plt.title('Scree Plot')
+plt.xlabel('Pricipal Component')
+plt.ylabel('Threshold in %')
+plt.show()
+In [ ]:
+X_orig = X
+
+for component,var in zip(components,thresholds):
+    pca = PCA(n_components=component)
+    X_transformed = pca.fit_transform(X_orig)
+    print('{}% of thresholds to be retained'.format(var))
+    print('New shape of the dataset:',X_transformed.shape)
+    print('\n')
